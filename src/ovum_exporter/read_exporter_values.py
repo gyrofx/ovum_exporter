@@ -41,8 +41,10 @@ def read_exporter_values(client, slave):
         if result:
             results.append(result)
 
-    with open('result.json', 'w') as f:
-        json.dump(results, f, indent=4)
+    # with open('result.json', 'w') as f:
+    #     json.dump(results, f, indent=4)
+
+    return results
 
 # 12308           Rps             50              rps             Inverter RPS set
 # 12318           HS              ON                              Main switch

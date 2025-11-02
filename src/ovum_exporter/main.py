@@ -1,9 +1,11 @@
 import argparse
+from time import sleep
 
 from ovum_exporter import constants
 from ovum_exporter.read_exporter_values import read_exporter_values
 from ovum_exporter.modbus import connect_to_modbusRTU, connect_to_modbusTCP
 from ovum_exporter.ovum import init_ovum
+import signal
 
 
 # Initial Setup, call-arguments, load json-files
@@ -33,7 +35,9 @@ def init_parser():
 
 # Main function to call after script starts
 def main():
-    global args, client, descriptor, units, typeMap
+    global args, client, descriptor, units, typeMap, stopping
+
+    stopping = False
 
     args = init_parser().parse_args()
     init_ovum()
@@ -51,10 +55,22 @@ def main():
         print("Connection failed, exiting...")
         return
 
-    values = read_exporter_values(client, args.slave)
-    print(values)
-    
+    while not stopping: 
+        values =read_exporter_values(client, args.slave)
+        print(values)
+        for _ in range(30):
+            if stopping:
+                break
+            sleep(1)
+
     if client: client.close()
+
+def signal_handler(sig, frame):
+    global  stopping
+    stopping = True
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
 
 # Main Call
 if __name__ == "__main__":
