@@ -54,6 +54,22 @@ def init_metrics():
         GaugeMetrics(12588, 'COPM', 'ovum_cop_monthly'),  #          COPM            5.2                             Monthly
         GaugeMetrics(12598, 'COPY', 'ovum_cop_yearly'),  #          COPY            5.3                             Yearly
         GaugeMetrics(12608, 'TOTA', 'ovum_cop_total'),  #          TOTA            5.3                             Total
+
+        GaugeMetrics(12988, 'EQin', 'ovum_eq_in'),                          # 12988           EQin            12.7            °C              ES in
+        GaugeMetrics(12998, 'EQou', 'ovum_eq_out'),                         # 12998           EQou            9.6             °C              ES out
+        GaugeMetrics(13008, 'AO02', 'ovum_eq_pump'),                        # 13008           AO02            70.0            %               ES pump
+
+        GaugeMetrics(13488, 'DrTm', 'ovum_drive_temperature'),              # 13488           DrTm            33              °C              Drive temperature
+        GaugeMetrics(13498, 'DrKw', 'ovum_inverter_power'),                 # 13498           DrKw            0.85            kW              Inverter power
+
+        GaugeMetrics(13898, 'AI07', 'ovum_heac1_flow_temperature'),         # 13898           AI07            31.0            °C              HEAC1 flow temp.
+        GaugeMetrics(13918, 'AI08', 'ovum_heac1_return_temperature'),       # 13918           AI08            28.9            °C              HEAC1 return temp.
+
+        GaugeMetrics(15538, 'DoTs', 'ovum_tap_water_temperature'),          # 15538           DoTs            47.0            °C              Tap water
+        GaugeMetrics(15548, 'DoT', 'ovum_tap_act_temperature'),             # 15548           DoT             45.9            °C              Tap act.
+        GaugeMetrics(15448, 'SpTo', 'ovum_dhw_tank_upper_temperature'),     # 15448           SpTo            47.8            °C              Temp. DHW-Tank upper
+        GaugeMetrics(15458, 'SpTm', 'ovum_dhw_tank_middle_temperature'),    # 15458           SpTm            47.1            °C              Temp. DHW-Tank middle
+        GaugeMetrics(15578, 'FpMi', 'ovum_pump_min'),                       # 15578           FpMi            16.0            %               Pumpe min
     ]
 
     print(_registers)
