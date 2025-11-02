@@ -67,8 +67,6 @@ def init_metrics():
 
         GaugeMetrics(15538, 'DoTs', 'ovum_tap_water_temperature'),          # 15538           DoTs            47.0            °C              Tap water
         GaugeMetrics(15548, 'DoT', 'ovum_tap_act_temperature'),             # 15548           DoT             45.9            °C              Tap act.
-        GaugeMetrics(15448, 'SpTo', 'ovum_dhw_tank_upper_temperature'),     # 15448           SpTo            47.8            °C              Temp. DHW-Tank upper
-        GaugeMetrics(15458, 'SpTm', 'ovum_dhw_tank_middle_temperature'),    # 15458           SpTm            47.1            °C              Temp. DHW-Tank middle
         GaugeMetrics(15578, 'FpMi', 'ovum_pump_min'),                       # 15578           FpMi            16.0            %               Pumpe min
     ]
 
