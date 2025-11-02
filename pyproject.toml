@@ -12,6 +12,7 @@ license = { text = "MIT" }
 requires-python = ">=3.10"
 dependencies = [
     "pymodbus==3.5.2",
+    "prometheus-client"
 ]
 
 [tool.setuptools.packages.find]

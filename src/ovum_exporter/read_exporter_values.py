@@ -1,50 +1,71 @@
 import json
 
+from prometheus_client import Gauge
+
 from ovum_exporter.ovum import read_ovum
+from dataclasses import dataclass
+
+def find_descriptor_text_from_parameter(parameter):
+    from ovum_exporter.ovum import descriptor
+    lang = 'en'
+    matching_item = next((item for item in descriptor if f"{item['parameter']}" == parameter),None)
+    descriptor_text = matching_item.get("tlangalphakey", {}).get(lang, "") if matching_item else ""
+    return descriptor_text
 
 
-def read_exporter_values(client, slave):
+@dataclass
+class GaugeMetrics:
+    register: int
+    parameter: str
+    metric_name: str
+    description: str = ""
+    metrics: Gauge = None
 
-    registers = [
-        12308  , #          Rps             50              rps             Inverter RPS set
-        12318  , #          HS              ON                              Main switch
-        12318  , #          HS              ON                              Main switch
-        12328  , #          ALAR            No                              Active Alarm
-        12338  , #          Anfo            HEATING                         Operating Mode
-        12348  , #          CoMi            2               min             Running time
-        12358  , #          CoHo            36              h               Working hours
-        12368  , #          HePw            6.03            kW              Heating power
-
-        12388  , #          ATvz            10.9            °C              Ambient.t.avg.
-        12398  , #          ReTe            39.8            °C              Controler temperature
-        12408  , #          Spo             47.8            °C              Temp. DHW-Tank upper
-        12418  , #          Spm             47.1            °C              Temp. DHW-Tank middle
-        12428  , #          Spu             30.9            °C              Temp. Heating Tank lower
+    def __post_init__(self):
+        self.metrics = Gauge(self.metric_name, self.description)
+        # if not self.description:
+        #     self.description = find_descriptor_text_from_parameter(self.parameter)
+    
 
 
-        12528  , #          HeaW            153.06          kWh             Weekly
-        12538  , #          HeaM            85.47           kWh             Monthly
-        12548  , #          HeaY            153.06          kWh             Yearly
-        12558  , #          HeaT            153.06          kWh             Total
-        12568  , #          COP                                             COP
-        12578  , #          COPW            5.3                             Weekly
-        12588  , #          COPM            5.2                             Monthly
-        12598  , #          COPY            5.3                             Yearly
-        12608  , #          TOTA            5.3                             Total
+def init_metrics():
+    global _registers
+    _registers = [
+        GaugeMetrics(12308, 'Rps ', 'ovum_inverter_rps'),  #          Rps             50              rps             Inverter RPS set
+        # GaugeMetrics(12318, 'HS  ', 'ovum_main_switch'),  #          HS              ON                              Main switch
+        # GaugeMetrics(12328, 'ALAR', 'ovum_active_alarm'),  #          ALAR            No                              Active Alarm
+        # GaugeMetrics(12338, 'Anfo', 'ovum_operating_mode'),  #          Anfo            HEATING                         Operating Mode
+        GaugeMetrics(12348, 'CoMi', 'ovum_running_time'),  #          CoMi            2               min             Running time
+        GaugeMetrics(12358, 'CoHo', 'ovum_working_hours'),  #          CoHo            36              h               Working hours
+        GaugeMetrics(12368, 'HePw', 'ovum_heating_power'),  #          HePw            6.03            kW              Heating power
 
+        GaugeMetrics(12388, 'ATvz', 'ovum_ambient_temperature_avg'),  #          ATvz            10.9            °C              Ambient.t.avg.
+        GaugeMetrics(12398, 'ReTe', 'ovum_controller_temperature'),  #          ReTe            39.8            °C              Controler temperature
+        GaugeMetrics(12408, 'Spo ', 'ovum_dhw_tank_upper_temperature'),  #          Spo             47.8            °C              Temp. DHW-Tank upper
+        GaugeMetrics(12418, 'Spm ', 'ovum_dhw_tank_middle_temperature'),  #          Spm             47.1            °C              Temp. DHW-Tank middle
+        GaugeMetrics(12428, 'Spu ', 'ovum_dhw_tank_lower_temperature'),  #          Spu             30.9            °C              Temp. Heating Tank lower
+
+        GaugeMetrics(12528, 'HeaW', 'ovum_weekly_heating_energy'),  #          HeaW            153.06          kWh             Weekly
+        GaugeMetrics(12538, 'HeaM', 'ovum_monthly_heating_energy'),  #          HeaM            85.47           kWh             Monthly
+        GaugeMetrics(12548, 'HeaY', 'ovum_yearly_heating_energy'),  #          HeaY            153.06          kWh             Yearly
+        GaugeMetrics(12558, 'HeaT', 'ovum_total_heating_energy'),  #          HeaT            153.06          kWh             Total
+        # GaugeMetrics(12568, 'COP ', 'ovum_cop'),  #          COP                                             COP
+        GaugeMetrics(12578, 'COPW', 'ovum_cop_weekly'),  #          COPW            5.3                             Weekly
+        GaugeMetrics(12588, 'COPM', 'ovum_cop_monthly'),  #          COPM            5.2                             Monthly
+        GaugeMetrics(12598, 'COPY', 'ovum_cop_yearly'),  #          COPY            5.3                             Yearly
+        GaugeMetrics(12608, 'TOTA', 'ovum_cop_total'),  #          TOTA            5.3                             Total
     ]
 
-    results = []
-
-    for register in registers:
-        result = read_ovum(client, register, slave=slave)
+    print(_registers)
+    
+def read_exporter_values(client, slave):
+    for metrics in _registers:
+        result = read_ovum(client, metrics.register, slave=slave)
         if result:
-            results.append(result)
+            metrics.metrics.set(result['value_float'])
+            print(f'metrics {metrics.metrics} updated to {result["value_float"]}')
 
-    # with open('result.json', 'w') as f:
-    #     json.dump(results, f, indent=4)
 
-    return results
 
 # 12308           Rps             50              rps             Inverter RPS set
 # 12318           HS              ON                              Main switch

@@ -1,8 +1,10 @@
 import argparse
+import json
 from time import sleep
+from prometheus_client import Gauge, start_http_server
 
 from ovum_exporter import constants
-from ovum_exporter.read_exporter_values import read_exporter_values
+from ovum_exporter.read_exporter_values import init_metrics, read_exporter_values
 from ovum_exporter.modbus import connect_to_modbusRTU, connect_to_modbusTCP
 from ovum_exporter.ovum import init_ovum
 import signal
@@ -29,18 +31,23 @@ def init_parser():
     parser.add_argument('--noerror', action='store_true', help='Skip addresses with error and do not print')
     parser.add_argument('--output', type=str, default=None, help='Write output to a file')
     parser.add_argument('--dev', action='store_true', help='Debugging and test parameter')
+    parser.add_argument('--prometheus_port', type=int, default=8777, help='Port for Prometheus HTTP server')
     return parser
+
+
+# INVERTER_RPS = Gauge('ovum_inverter_rps', 'Inverter RPS set')
 
 
 
 # Main function to call after script starts
 def main():
-    global args, client, descriptor, units, typeMap, stopping
+    global args, client, stopping
 
     stopping = False
 
     args = init_parser().parse_args()
     init_ovum()
+    init_metrics()
     print(args)
     print(read_exporter_values)
 
@@ -55,15 +62,29 @@ def main():
         print("Connection failed, exiting...")
         return
 
+    # Start Prometheus HTTP server
+    print(f"Starting Prometheus HTTP server on port {args.prometheus_port}")
+    start_http_server(args.prometheus_port)
+
     while not stopping: 
-        values =read_exporter_values(client, args.slave)
-        print(values)
-        for _ in range(30):
+        read_exporter_values(client, args.slave)
+
+        # rps_value = next((item for item in values if item["parameter"] == "Rps "), None)
+
+        # if rps_value:
+        #     INVERTER_RPS.set(rps_value['value'])
+        # else:
+        #     INVERTER_RPS.remove()
+
+        # with open('result.json', 'w') as f:
+        #     json.dump(values, f, indent=4)
+        for _ in range(20):  # Changed from 30 to 20 seconds
             if stopping:
                 break
             sleep(1)
 
-    if client: client.close()
+    if client: 
+        client.close()
 
 def signal_handler(sig, frame):
     global  stopping
