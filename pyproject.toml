@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ovum_exporter"
+version = "0.1.0"
+description = "Prometheus Exporter for Ovum heatpump"
+authors = [{ name = "Felix Eichenberger", email = "felix@aq1.ch" }]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "pymodbus==3.5.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

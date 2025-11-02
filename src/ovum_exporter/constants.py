@@ -1,0 +1,23 @@
+
+# Define constants
+METHOD_TCP = 'TCP'
+METHOD_RTU = 'RTU'
+
+DEFAULT_HOST = '127.0.0.1'
+DEFAULT_PORT = 502
+
+DEFAULT_COMPORT = '/dev/ttyUSB0'
+DEFAULT_BAUDRATE = 19200
+DEFAULT_PARITY = 'E'
+DEFAULT_STOPBITS = 1
+
+DEFAULT_SLAVE = 247
+DEFAULT_START_ADDRESS = 12288
+DEFAULT_STOP_ADDRESS = 18408
+DEFAULT_LANG = 'default'
+
+JSON_UNITS = 'src/ovum_exporter/ovUnits.json'
+JSON_DESCRIPTOR = 'src/ovum_exporter/ovDescriptor.json'
+JSON_TYPEMAP = 'src/ovum_exporter/ovTypeMap.json'
+
+HASS_MODBUS_NAME = 'ovum_modbus'
