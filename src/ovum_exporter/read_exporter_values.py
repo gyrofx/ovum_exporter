@@ -40,6 +40,8 @@ def init_metrics():
         GaugeMetrics(12368, 'HePw', 'ovum_heating_power'),  #          HePw            6.03            kW              Heating power
 
         GaugeMetrics(12388, 'ATvz', 'ovum_ambient_temperature_avg'),  #          ATvz            10.9            °C              Ambient.t.avg.
+        GaugeMetrics(14608, 'AI9s', 'ovum_outdoor_temperature'),            # 14608           AI9s            80              1               8.0             °C              0                               -32768          32767           True            False           4598            Outdoor temp
+
         GaugeMetrics(12398, 'ReTe', 'ovum_controller_temperature'),  #          ReTe            39.8            °C              Controler temperature
         GaugeMetrics(12408, 'Spo ', 'ovum_dhw_tank_upper_temperature'),  #          Spo             47.8            °C              Temp. DHW-Tank upper
         GaugeMetrics(12418, 'Spm ', 'ovum_dhw_tank_middle_temperature'),  #          Spm             47.1            °C              Temp. DHW-Tank middle
@@ -55,19 +57,24 @@ def init_metrics():
         GaugeMetrics(12598, 'COPY', 'ovum_cop_yearly'),  #          COPY            5.3                             Yearly
         GaugeMetrics(12608, 'TOTA', 'ovum_cop_total'),  #          TOTA            5.3                             Total
 
-        GaugeMetrics(12988, 'EQin', 'ovum_eq_in'),                          # 12988           EQin            12.7            °C              ES in
-        GaugeMetrics(12998, 'EQou', 'ovum_eq_out'),                         # 12998           EQou            9.6             °C              ES out
-        GaugeMetrics(13008, 'AO02', 'ovum_eq_pump'),                        # 13008           AO02            70.0            %               ES pump
+        GaugeMetrics(12988, 'EQin', 'ovum_ground_source_in'),                          # 12988           EQin            12.7            °C              ES in
+        GaugeMetrics(12998, 'EQou', 'ovum_ground_source_out'),                         # 12998           EQou            9.6             °C              ES out
+        GaugeMetrics(13008, 'AO02', 'ovum_ground_source_pump'),                        # 13008           AO02            70.0            %               ES pump
 
         GaugeMetrics(13488, 'DrTm', 'ovum_drive_temperature'),              # 13488           DrTm            33              °C              Drive temperature
         GaugeMetrics(13498, 'DrKw', 'ovum_inverter_power'),                 # 13498           DrKw            0.85            kW              Inverter power
 
-        GaugeMetrics(13898, 'AI07', 'ovum_heac1_flow_temperature'),         # 13898           AI07            31.0            °C              HEAC1 flow temp.
-        GaugeMetrics(13918, 'AI08', 'ovum_heac1_return_temperature'),       # 13918           AI08            28.9            °C              HEAC1 return temp.
+        GaugeMetrics(13898, 'AI07', 'ovum_heat_circle_1_flow_temperature'),         # 13898           AI07            31.0            °C              HEAC1 flow temp.
+        GaugeMetrics(13918, 'AI08', 'ovum_heat_circle_1_return_temperature'),       # 13918           AI08            28.9            °C              HEAC1 return temp.
+        GaugeMetrics(14848, 'HReS', 'ovum_heat_circle_1_return_set_temperature'),   # 14848           HReS            287             1               28.7            °C              0                               0               45.0            True            False           4611            Return set temperature
+        GaugeMetrics(14898, 'AO11', 'ovum_heat_circle_1_pump'),                     # 14898           AO11            7000            2               70.0            %               13                              -32768          32767           True            False           4607            HEAC 1 pump
+        
 
         GaugeMetrics(15538, 'DoTs', 'ovum_tap_water_temperature'),          # 15538           DoTs            47.0            °C              Tap water
-        GaugeMetrics(15548, 'DoT', 'ovum_tap_act_temperature'),             # 15548           DoT             45.9            °C              Tap act.
-        GaugeMetrics(15578, 'FpMi', 'ovum_pump_min'),                       # 15578           FpMi            16.0            %               Pumpe min
+        GaugeMetrics(15548, 'DoT',  'ovum_tap_act_temperature'),            # 15548           DoT             45.9            °C              Tap act.
+        GaugeMetrics(15578, 'FpMi', 'ovum_tap_pump_min'),                   # 15578           FpMi            16.0            %               Pumpe min
+        GaugeMetrics(15448, 'SpTo', 'ovum_tap_pump_percent'), # 15588           vPID            0               2               0.0             %               13                              0               100.0           True            False           4807            FWT pump
+
     ]
 
     print(_registers)
